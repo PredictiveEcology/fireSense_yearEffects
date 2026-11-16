@@ -13,7 +13,7 @@ defineModule(sim, list(
   timeunit = "year",
   citation = list(),
   documentation = list("README.md"),
-  reqdPkgs = list("ggplot2", "PredictiveEcology/fireSenseUtils@development", "PredictiveEcology/SpaDES.core@development"),
+  reqdPkgs = list("ggplot2", "PredictiveEcology/fireSenseUtils@development (>= 0.2.3.9173)", "PredictiveEcology/SpaDES.core@development"),
   parameters = bindrows(
     defineParameter("ledgerFiles", "character", NA_character_, NA, NA,
                     "Paths of the national ignition ledgers, fireSenseIgnitionParams_*.rds (one row per ELF, with the fitted ignition and escape models)."),
