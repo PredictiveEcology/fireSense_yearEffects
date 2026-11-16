@@ -32,7 +32,7 @@ defineModule(sim, list(
 doEvent.fireSense_yearEffects <- function(sim, eventTime, eventType) {
   switch(eventType,
     init = {
-      sim$yearEffectsTable <- readYearEffects(P(sim)$ledgerFiles)
+      sim$yearEffectsTable <- fireSenseUtils::readYearEffects(P(sim)$ledgerFiles)
       sim$yearEffectsSummary <- summariseYearEffects(sim$yearEffectsTable)
       out <- outputPath(sim); dir.create(out, recursive = TRUE, showWarnings = FALSE)
       utils::write.csv(sim$yearEffectsTable, file.path(out, "yearEffectsTable.csv"), row.names = FALSE)

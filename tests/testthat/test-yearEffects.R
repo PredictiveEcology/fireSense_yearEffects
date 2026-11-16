@@ -1,16 +1,6 @@
-test_that("readYearEffects() gives one long table and skips ELFs without yearEffects", {
-  d <- toyDir(); f <- toyLedger(d)
-  expect_message(tab <- readYearEffects(f), "1.3")
-  expect_setequal(unique(tab$ELF), c("1.1", "1.2"))
-  expect_equal(nrow(tab), 2 * 2 * length(toyYears))
-  expect_setequal(tab$process, c("ignition", "escape"))
-  expect_identical(unique(tab$ledger), "fireSenseIgnitionParams_toy")
-  expect_true(all(c(yearEffectColumns) %in% names(tab)))
-})
-
 test_that("summaries: shared effect gives Spearman 1, priorSD 0 escape is reported with multiplier 1", {
   d <- toyDir(); f <- toyLedger(d)
-  tab <- suppressMessages(readYearEffects(f)); s <- summariseYearEffects(tab)
+  tab <- suppressMessages(fireSenseUtils::readYearEffects(f)); s <- summariseYearEffects(tab)
   expect_named(s, c("spread", "betweenELF", "ignitionEscape", "drift"))
   b <- s$betweenELF; bi <- b[b$process == "ignition", ]
   expect_equal(bi$rho, 1); expect_equal(bi$n, length(toyYears))
@@ -25,16 +15,6 @@ test_that("summaries: shared effect gives Spearman 1, priorSD 0 escape is report
   expect_equal(nrow(dr), 4)
   expect_equal(dr$rho[dr$ELF == "1.1" & dr$process == "ignition"],
                stats::cor(toyYears, c(0.6, 1.5, 0.9, 2, 1.1, 0.7, 1.3, 0.8), method = "spearman"))
-})
-
-test_that("readYearEffects() stops on missing files", {
-  expect_error(readYearEffects(file.path(tempdir(), "nope.rds")), "not found")
-  expect_error(readYearEffects(NA_character_), "at least one")
-})
-
-test_that("readYearEffects() stops on a ledger with two rows for one ELF, rather than mixing them", {
-  f <- toyLedger(toyDir()); x <- readRDS(f); saveRDS(rbind(x, x[1, ]), f)
-  expect_error(readYearEffects(f), "more than one row for ELF")
 })
 
 test_that("the module runs and writes the csvs", {
