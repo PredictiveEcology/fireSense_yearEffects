@@ -5,7 +5,7 @@
 yearEffectColumns <- c("year", "observed", "expected", "priorSD", "multiplier", "shape")
 
 ## The fitted model slots of a ledger row that hold the two processes
-yearEffectProcesses <- c(ignition = "fireSense_IgnitionFitted", escape = "fireSense_EscapeFitted")
+yearEffectProcesses <- stats::setNames(fireSenseUtils::ignitionFitAdditionalColNamesTxt, c("ignition", "escape"))
 
 #' Read the year effects of ignition ledgers
 #'
@@ -22,6 +22,7 @@ readYearEffects <- function(ledgerFiles) {
   pieces <- list()
   for (f in ledgerFiles) {
     x <- readRDS(f); ledger <- sub("\\.rds$", "", basename(f))
+    if (anyDuplicated(x$polygonID)) stop(ledger, " has more than one row for ELF ", paste(unique(x$polygonID[duplicated(x$polygonID)]), collapse = ", "))
     for (i in seq_len(nrow(x))) for (p in names(yearEffectProcesses)) {
       ye <- x[[yearEffectProcesses[[p]]]][[i]]$modelList$yearEffects
       if (is.null(ye)) {

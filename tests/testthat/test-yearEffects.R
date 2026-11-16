@@ -32,6 +32,11 @@ test_that("readYearEffects() stops on missing files", {
   expect_error(readYearEffects(NA_character_), "at least one")
 })
 
+test_that("readYearEffects() stops on a ledger with two rows for one ELF, rather than mixing them", {
+  f <- toyLedger(toyDir()); x <- readRDS(f); saveRDS(rbind(x, x[1, ]), f)
+  expect_error(readYearEffects(f), "more than one row for ELF")
+})
+
 test_that("the module runs and writes the csvs", {
   d <- toyDir(); f <- toyLedger(d)
   out <- file.path(d, "out")

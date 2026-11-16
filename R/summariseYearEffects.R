@@ -30,7 +30,7 @@ summariseYearEffects <- function(tab) {
     data.frame(priorSD = d$priorSD[1L], q025 = q[1L], q50 = q[2L], q975 = q[3L], nYears = nrow(d))
   })
   betweenELF <- byGroup(c("ledger", "process"), function(d) {
-    w <- tapply(d$logMultiplier, list(d$year, d$ELF), mean)
+    w <- tapply(d$logMultiplier, list(d$year, d$ELF), identity)   # one value per year and ELF (readYearEffects() stops on duplicate ELFs)
     elfs <- colnames(w)
     if (length(elfs) < 2L) return(NULL)
     pr <- t(utils::combn(elfs, 2L))
